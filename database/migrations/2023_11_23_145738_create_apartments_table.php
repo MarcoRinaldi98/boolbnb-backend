@@ -22,8 +22,8 @@ return new class extends Migration
             $table->tinyInteger('bathrooms');
             $table->tinyInteger('mq');
             $table->string('address', 250);
-            $table->decimal('lat');
-            $table->decimal('lon');
+            $table->decimal('lat', 11, 8);
+            $table->decimal('lon', 11, 8);
             $table->string('photo', 300);
             $table->boolean('visible');
             $table->string('slug', 150);

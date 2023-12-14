@@ -32,7 +32,7 @@
                     <td>{{ $apartment->lon }}</td>
                     <td>
                         <a class="btn btn-primary"
-                            href="{{ route('admin.apartments.show', ['apartment' => $apartment->slug]) }}">VEDI</a>
+                            href="{{ route('admin.apartments.show', ['apartment' => $apartment->id]) }}">VEDI</a>
                     </td>
                 </tr>
             @endforeach

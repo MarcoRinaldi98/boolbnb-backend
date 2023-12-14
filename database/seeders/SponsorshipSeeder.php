@@ -15,31 +15,27 @@ class SponsorshipSeeder extends Seeder
      */
     public function run()
     {
-        $mySponsorships = [
+        $sponsorships = [
             [
                 'name' => 'Bronze',
                 'price' => 2.99,
-                'duration' => 24
+                'duration' => '24:00:00'
             ],
             [
                 'name' => 'Silver',
                 'price' => 5.99,
-                'duration' => 72
+                'duration' => '72:00:00'
             ],
             [
                 'name' => 'Gold',
                 'price' => 9.99,
-                'duration' => 144
+                'duration' => '144:00:00'
             ]
         ];
-        foreach ($mySponsorships as $sponsorship) {
+        foreach ($sponsorships as $sponsorship) {
 
-            $newSponsorship = new Sponsorship();
-            $newSponsorship->name = $sponsorship['name'];
-            $newSponsorship->price = $sponsorship['price'];
-            $newSponsorship->duration = $sponsorship['duration'];
-
-            $newSponsorship->save();
+            Sponsorship::factory()
+                ->create($sponsorship);
         }
     }
 }

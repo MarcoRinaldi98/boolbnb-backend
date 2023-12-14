@@ -15,32 +15,22 @@ class ServiceSeeder extends Seeder
      */
     public function run()
     {
-        $myServices = [
-            [
-                'name' => 'Wi-Fi'
-            ],
-            [
-                'name' => 'Posto Macchina'
-            ],
-            [
-                'name' => 'Piscina'
-            ],
-            [
-                'name' => 'Portineria'
-            ],
-            [
-                'name' => 'Sauna'
-            ],
-            [
-                'name' => 'Vista Mare'
-            ]
+        $services = [
+            'Wi-Fi',
+            'Hot tub',
+            'EV charging space',
+            'Pet sittting',
+            'Kitchen',
+            'Washing machine',
+            'A/C',
+            'Free parking'
         ];
-        foreach ($myServices as $service) {
 
-            $newService = new Service();
-            $newService->name = $service['name'];
+        foreach ($services as $key => $value) {
 
-            $newService->save();
+            Service::factory()->create([
+                'name' => $value
+            ]);
         }
     }
 }

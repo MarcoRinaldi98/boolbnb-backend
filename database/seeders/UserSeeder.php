@@ -16,26 +16,14 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $tableFields = [
-            [
-                'name' => 'Marco',
-                'lastname' => 'Rinaldi',
-                'email' => 'marco@test.com',
-                'birth_date' => '10/09/1998',
-                'password' => Hash::make('password')
-            ]
+        User::factory()->create({
+            'name' => 'John',
+            'lastname' => 'Doe',
+            'email' => 'test@test.it'
+        });
 
-        ];
-        foreach ($tableFields as $field) {
-
-            $newUser = new User();
-            $newUser->name = $field['name'];
-            $newUser->lastname = $field['lastname'];
-            $newUser->email = $field['email'];
-            $newUser->phone = $field['birth_date'];
-            $newUser->password = $field['password'];
-
-            $newUser->save();
-        }
+        User::factory()->create({
+            'email' => 'baduser@test.it'
+        });
     }
 }

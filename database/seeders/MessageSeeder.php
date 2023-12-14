@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Apartment;
 use App\Models\Message;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,22 +16,14 @@ class MessageSeeder extends Seeder
      */
     public function run()
     {
-        $myMessages = [
-            [
-                'name' => 'Mario',
-                'lastname' => 'Rossi',
-                'email' => 'mario@rossi.com',
-                'text' => "Volevo sapere se c'è uno spazio adatto ai cani"
-            ]
-        ];
-        foreach ($myMessages as $message) {
-            $newMessage = new Message();
-            $newMessage->name = $message['name'];
-            $newMessage->lastname = $message['lastname'];
-            $newMessage->email = $message['email'];
-            $newMessage->text = $message['text'];
+        $apartments = Apartment::inRandomOrder()->get();
 
-            $newMessage->save();
-        }
+        $apartments->each(function ($apartment, $key) {
+            if ($key > 0) {
+                Message::factory(rand(1, 3))
+                    ->for($apartment)
+                    ->create();
+            }
+        });
     }
 }

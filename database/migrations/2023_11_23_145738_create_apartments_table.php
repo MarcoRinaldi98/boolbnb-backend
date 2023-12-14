@@ -26,7 +26,6 @@ return new class extends Migration
             $table->decimal('lon', 11, 8);
             $table->string('photo', 300);
             $table->boolean('visible');
-            $table->string('slug', 150);
 
             $table->timestamps();
         });

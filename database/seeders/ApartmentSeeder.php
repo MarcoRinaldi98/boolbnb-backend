@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\Apartment;
+use App\Models\Service;
+use App\Models\Sponsorship;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,89 +19,74 @@ class ApartmentSeeder extends Seeder
      */
     public function run()
     {
-        $myApartments = [
+        $user = User::where('email', 'test@test.it')->frist();
+
+        $addresses = [
             [
-                'name' => 'Appartamento Roma',
-                'rooms' => '4',
-                'beds' => '2',
-                'bathrooms' => '2',
-                'mq' => '60',
                 'address' => 'Via di Porta Tenaglia 7, 20121 Milano',
-                'lat' => '45.47755652',
-                'lon' => '9.18146786',
-                'photo' => 'https://picsum.photos/200/300',
-                'visible' => true,
-                'slug' => 'appartamento-roma'
+                'coordinates' => [45.47755652, 9.18146786]
             ],
             [
-                'name' => 'Appartamento Torino',
-                'rooms' => '3',
-                'beds' => '1',
-                'bathrooms' => '1',
-                'mq' => '35',
                 'address' => 'Via dei Chiostri 1, 20121 Milano',
-                'lat' => '45.47407891',
-                'lon' => '9.18665739',
-                'photo' => 'https://picsum.photos/200/300',
-                'visible' => true,
-                'slug' => 'appartamento-torino'
+                'coordinates' => [45.47407891, 9.18665739]
             ],
             [
-                'name' => 'Appartamento Napoli',
-                'rooms' => '4',
-                'beds' => '2',
-                'bathrooms' => '1',
-                'mq' => '45',
                 'address' => 'Piazza Napoli 19, 20146 Milano',
-                'lat' => '45.4530508',
-                'lon' => '9.15473502',
-                'photo' => 'https://picsum.photos/200/300',
-                'visible' => true,
-                'slug' => 'appartamento-napoli'
+                'coordinates' => [45.4530508, 9.15473502]
             ],
             [
-                'name' => 'Appartamento Milano',
-                'rooms' => '3',
-                'beds' => '2',
-                'bathrooms' => '1',
-                'mq' => '40',
                 'address' => 'Via 4 Novembre 29, 20004 Arluno',
-                'lat' => '45.50326101',
-                'lon' => '8.94720878',
-                'photo' => 'https://picsum.photos/200/300',
-                'visible' => true,
-                'slug' => 'appartamento-milano'
+                'coordinates' => [45.50326101, 8.94720878]
             ],
             [
-                'name' => 'Appartamento Calabria',
-                'rooms' => '6',
-                'beds' => '3',
-                'bathrooms' => '2',
-                'mq' => '65',
                 'address' => 'Cascina Conterico 18, 20067 Paullo',
-                'lat' => '45.43668337',
-                'lon' => '9.40817037',
-                'photo' => 'https://picsum.photos/200/300',
-                'visible' => true,
-                'slug' => 'appartamento-calabria'
+                'coordinates' => [45.43668337, 9.40817037]
+            ],
+            [
+                'address' => 'Via Guzzina 9, 20861 Brugherio',
+                'coordinates' => [45.54071668, 9.29466799]
+            ],
+            [
+                'address' => 'Via Quindici Martiri 2/23, 20055 Vimodrone',
+                'coordinates' => [45.5096724, 9.28240405]
+            ],
+            [
+                'address' => 'Piazza Leonardo da Vinci 36, 20133 Milano',
+                'coordinates' => [45.47826048, 9.22690155]
             ]
         ];
 
-        foreach ($myApartments as $appartment) {
-            $newApartment = new Apartment();
-            $newApartment->name = $appartment['name'];
-            $newApartment->rooms = $appartment['rooms'];
-            $newApartment->beds = $appartment['beds'];
-            $newApartment->bathrooms = $appartment['bathrooms'];
-            $newApartment->mq = $appartment['mq'];
-            $newApartment->address = $appartment['address'];
-            $newApartment->lat = $appartment['lat'];
-            $newApartment->lon = $appartment['lon'];
-            $newApartment->photo = $appartment['photo'];
-            $newApartment->visible = $appartment['visible'];
-            $newApartment->slug = $appartment['slug'];
+        for ($i = 0; $i < count($addresses); $i++) {
 
-            $newApartment->save();
+            $visibility = true;
+            if ($i === 0) {
+                $visibility = false;
+            }
+
+            $apartment = Apartment::factory()
+                ->for($user)
+                ->setCoordinates($addresses[$i]["coordinates"])
+                ->hasAttached(Service::inRandomOrder()->limit(rand(1, 5))->get())
+                ->setVisibility($visibility)
+                ->create([
+                    "address" => $addresses[$i]["address"]
+                ]);
+
+            if ($i === 1) {
+                $sponsorship = Sponsorship::where('id', 1)->frist();
+                $now = Carbon::now()->timezone('Europe/Rome');
+                $now->add($sponsorship->duration)->subWeek();
+                $apartment->sponsorships()->attach($sponsorship, ['expire_date' => $now->toDateTime()]);
+            }
+
+            if ($i === 2) {
+                $sponsorship = Sponsorship::where('id', 2)->frist();
+                $apartment->sponsorships()->attach($sponsorship, ['expire_date' => $sponsorship->getExpireDateFromNow()]);
+            }
+
+            if ($i === 3) {
+                $apartment->delete();
+            }
         }
     }
 }
